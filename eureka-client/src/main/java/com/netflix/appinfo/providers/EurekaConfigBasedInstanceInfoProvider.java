@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * InstanceInfo provider that constructs the InstanceInfo this this instance using
- * EurekaInstanceConfig.
+ * EurekaInstanceConfig.根据EurekaInstanceConfig生成InstanceInfo
  *
  * This provider is @Singleton scope as it provides the InstanceInfo for both DiscoveryClient
  * and ApplicationInfoManager, and need to provide the same InstanceInfo to both.

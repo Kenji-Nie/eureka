@@ -35,6 +35,7 @@ import javax.inject.Singleton;
  * that information including <em>availability zone</em> is used for determining
  * which eureka server to communicate to.
  * </p>
+ * 动态配置
  *
  * @author Karthik Ranganathan
  *

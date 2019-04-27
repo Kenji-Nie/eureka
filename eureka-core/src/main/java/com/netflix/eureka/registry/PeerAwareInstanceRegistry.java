@@ -24,6 +24,7 @@ import com.netflix.eureka.resources.ASGResource;
 import java.util.List;
 
 /**
+ * 提供 Eureka-Server 集群内注册信息的同步服务
  * @author Tomasz Bak
  */
 public interface PeerAwareInstanceRegistry extends InstanceRegistry {

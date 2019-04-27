@@ -31,13 +31,20 @@ class InstanceInfoReplicator implements Runnable {
     private final DiscoveryClient discoveryClient;
     private final InstanceInfo instanceInfo;
 
+    //定时执行频率，单位：秒
     private final int replicationIntervalSeconds;
+    //定时执行器
     private final ScheduledExecutorService scheduler;
+    //定时执行任务的 Future
     private final AtomicReference<Future> scheduledPeriodicRef;
 
+    //是否开启调度
     private final AtomicBoolean started;
+    // 限流相关，跳过
     private final RateLimiter rateLimiter;
+    // 限流相关，跳过
     private final int burstSize;
+    // 限流相关，跳过
     private final int allowedRatePerMinute;
 
     InstanceInfoReplicator(DiscoveryClient discoveryClient, InstanceInfo instanceInfo, int replicationIntervalSeconds, int burstSize) {
@@ -62,7 +69,9 @@ class InstanceInfoReplicator implements Runnable {
 
     public void start(int initialDelayMs) {
         if (started.compareAndSet(false, true)) {
+            //设置应用实例信息数据不一致
             instanceInfo.setIsDirty();  // for initial register
+            //提交任务，并设置该任务的Future
             Future next = scheduler.schedule(this, initialDelayMs, TimeUnit.SECONDS);
             scheduledPeriodicRef.set(next);
         }
@@ -91,13 +100,15 @@ class InstanceInfoReplicator implements Runnable {
                     @Override
                     public void run() {
                         logger.debug("Executing on-demand update of local InstanceInfo");
-    
+
+                        //当状态发生变化时，取消无用的定时注册任务
                         Future latestPeriodic = scheduledPeriodicRef.get();
                         if (latestPeriodic != null && !latestPeriodic.isDone()) {
                             logger.debug("Canceling the latest scheduled update, it will be rescheduled at the end of on demand update");
                             latestPeriodic.cancel(false);
                         }
-    
+
+                        //再次启用
                         InstanceInfoReplicator.this.run();
                     }
                 });

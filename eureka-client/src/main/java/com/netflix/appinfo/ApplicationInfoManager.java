@@ -57,6 +57,7 @@ public class ApplicationInfoManager {
 
     private static ApplicationInfoManager instance = new ApplicationInfoManager(null, null, null);
 
+    //状态变更监听器
     protected final Map<String, StatusChangeListener> listeners;
     private final InstanceStatusMapper instanceStatusMapper;
 
@@ -161,6 +162,7 @@ public class ApplicationInfoManager {
      * Set the status of this instance. Application can use this to indicate
      * whether it is ready to receive traffic. Setting the status here also notifies all registered listeners
      * of a status change event.
+     * 设置应用实例状态变化
      *
      * @param status Status of the instance
      */
@@ -206,6 +208,7 @@ public class ApplicationInfoManager {
         }
 
         String newAddress;
+        //RefreshableInstanceConfig为动态实例配置，我们一般不使用，一般使用静态配置MyDataCenterInstanceConfig
         if (config instanceof RefreshableInstanceConfig) {
             // Refresh data center info, and return up to date address
             newAddress = ((RefreshableInstanceConfig) config).resolveDefaultAddress(true);
@@ -250,7 +253,10 @@ public class ApplicationInfoManager {
         if (leaseInfo == null) {
             return;
         }
+
+        //租约到期时间
         int currentLeaseDuration = config.getLeaseExpirationDurationInSeconds();
+        //租约续约频率
         int currentLeaseRenewal = config.getLeaseRenewalIntervalInSeconds();
         if (leaseInfo.getDurationInSecs() != currentLeaseDuration || leaseInfo.getRenewalIntervalInSecs() != currentLeaseRenewal) {
             LeaseInfo newLeaseInfo = LeaseInfo.Builder.newBuilder()

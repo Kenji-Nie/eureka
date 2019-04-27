@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  * An abstract instance info configuration with some defaults to get the users
  * started quickly.The users have to override only a few methods to register
  * their instance with eureka server.
+ * 静态配置
  *
  * @author Karthik Ranganathan
  *

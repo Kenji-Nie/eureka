@@ -143,6 +143,7 @@ public class ApplicationResource {
     @Consumes({"application/json", "application/xml"})
     public Response addInstance(InstanceInfo info,
                                 @HeaderParam(PeerEurekaNode.HEADER_REPLICATION) String isReplication) {
+        //请求头 isReplication 参数，和 Eureka-Server 集群复制相关
         logger.debug("Registering instance {} (replication={})", info.getId(), isReplication);
         // validate that the instanceinfo contains all the necessary required fields
         if (isBlank(info.getId())) {
@@ -161,7 +162,7 @@ public class ApplicationResource {
             return Response.status(400).entity("Missing dataCenterInfo Name").build();
         }
 
-        // handle cases where clients may be registering with bad DataCenterInfo with missing data
+        // handle cases where clients may be registering with bad DataCenterInfo with missing data AWS相关
         DataCenterInfo dataCenterInfo = info.getDataCenterInfo();
         if (dataCenterInfo instanceof UniqueIdentifier) {
             String dataCenterInfoId = ((UniqueIdentifier) dataCenterInfo).getId();
@@ -182,6 +183,7 @@ public class ApplicationResource {
             }
         }
 
+        //在PeerAwareInstanceRegistryImpl中实现
         registry.register(info, "true".equals(isReplication));
         return Response.status(204).build();  // 204 to be backwards compatible
     }

@@ -120,6 +120,7 @@ public interface EurekaInstanceConfig {
      * {@link HealthCheckCallback} and then decides to make itself unavailable.
      * </p>
      *
+     * 租约续约频率
      * @return time in seconds
      */
     int getLeaseRenewalIntervalInSeconds();
@@ -138,6 +139,7 @@ public interface EurekaInstanceConfig {
      * .
      * </p>
      *
+     * 租约到期时间
      * @return value indicating time in seconds.
      */
     int getLeaseExpirationDurationInSeconds();
